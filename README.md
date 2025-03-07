@@ -1,10 +1,12 @@
 # transformerIDSClassification
 #### An experiment using encoder only transformer (similar to BERT) in order to classify a sliding window of packets for IDS multi-class classificaton. This is inspired by the success of attention based architectures on sequential information and its ability to map hidden relationship between words in LLMs.
 
-### Early version findings (Note all results and discussions are based on the training detailed in "IDSTransformerLite.ipynb" this is a smaller version of the original which maintains its performance):
+### Early version findings
 
 #### Results summary
 Current results are yielding an overall multi-class accuracy of 99.97% +- 0.01% with accuracy on individual classes reaching as high as 99.999% (note classes severely underepresented by the dataset are excluded from this summary). More detail and charts can be found in the jupyter notebooks within this repo.
+
+(Note all results and discussions are based on the training detailed in "IDSTransformerLite.ipynb" this is a smaller version of the original which maintains its performance)
 
 #### Dataset
 The dataset is from the KDD cup 1999 (https://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html). It contains several million packet instances and has 23 classes with a highly varied class distribution. However since random sampling is currently used for the test train split, errors made on smaller classes are considered negligible (to be updated).
