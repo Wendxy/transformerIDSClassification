@@ -3,7 +3,7 @@
 
 
 #### Results summary
-Current results are yielding an overall multi-class accuracy of 99.90% +- 0.04% with a minimum 96% accuracy on individual classes. More detail and charts can be found in the jupyter notebook within this repo.
+Current results are yielding an overall multi-class accuracy of 99.90% +- 0.04% with a minimum of 93% accuracy on individual classes (ignoring classes severely underepresented by the dataset). More detail and charts can be found in the jupyter notebook within this repo.
 
 #### Dataset
 The dataset is from the KDD cup 1999 (https://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html). It contains several million packet instances and has 23 classes with a highly varied class distribution. However since random sampling is currently used for the test train split, errors made on smaller classes are considered negligible (to be updated).
