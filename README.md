@@ -1,6 +1,7 @@
 # transformerIDSClassification
-### An experiment using encoder only transformer (similar to BERT) in order to classify a sliding window of packets for IDS multi-class classificaton. This is inspired by the success of attention based architectures on sequential information and its ability to map hidden relationship between words in LLMs.
+#### An experiment using encoder only transformer (similar to BERT) in order to classify a sliding window of packets for IDS multi-class classificaton. This is inspired by the success of attention based architectures on sequential information and its ability to map hidden relationship between words in LLMs.
 
+### Early version findings:
 
 #### Results summary
 Current results are yielding an overall multi-class accuracy of 99.90% +- 0.04% with a minimum of 93% accuracy on individual classes (ignoring classes severely underepresented by the dataset). More detail and charts can be found in the jupyter notebook within this repo.
