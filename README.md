@@ -4,7 +4,7 @@
 ### Early version findings:
 
 #### Results summary
-Current results are yielding an overall multi-class accuracy of 99.90% +- 0.04% with a minimum of 93% accuracy on individual classes (ignoring classes severely underepresented by the dataset). More detail and charts can be found in the jupyter notebook within this repo.
+Current results are yielding an overall multi-class accuracy of 99.90% +- 0.06% with a minimum of 93% accuracy on individual classes (ignoring classes severely underepresented by the dataset). More detail and charts can be found in the jupyter notebook within this repo.
 
 #### Dataset
 The dataset is from the KDD cup 1999 (https://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html). It contains several million packet instances and has 23 classes with a highly varied class distribution. However since random sampling is currently used for the test train split, errors made on smaller classes are considered negligible (to be updated).
@@ -23,6 +23,8 @@ This model was trained on a 4070 ti super with 16gb vram and a batch size of 32.
 
 #### Inference Compute Performance
 Current inference time is between 0.6-0.8ms for a sliding window of 100 packets (on GPU with batch size = 1 during eval). If we were using the sliding window style detailed above where we only read in 100 intervals (instead of every single one) this would be sufficient assuming packets are 1500 bytes (average packet size) and we have a 67mbps link (average speed in Australia). With these assumed conditions every 0.70ms ~4 packets will be sent allowing model inference to keep ahead of packet stream with significant headroom, however this calculation does not consider outside of this packet stream condition (such as with consistently minimum packet sizes instead of 1500 bytes) and it does not consider all hardware conditions where the current model may still be too slow. In saying this, significant performance gains ( ~3x faster and ~4x smaller) potentially can be made via quantizing the model and / or ablative parameter reduction. (note: I've just reduced the number of certain layers by half without any impact to accuracy).
+
+Assuming ~5500 packets per second being sent, at our maximum experimental accuracy of 99.96%, the model only misclassifies 2 packets (assuming good generalization - note old dataset).
 
 #### Conclusion
 While transformer architectures inherently require heavier compute than simpler architectures, with the correct optimizations of sliding window size, model quantizing, packet sniffer hardware optimization (to be compatible with quantised models), and empirically guided parameter reduction, this nascent architecture is a promising future facing paradigm in IDS especially as attack patterns become significantly more complex and varied such that simpler classification models can no longer keep up. 
