@@ -6,36 +6,10 @@
 Current results are yielding an overall multi-class accuracy of 99.90% +- 0.04% with a minimum 96% accuracy on individual classes. More detail and charts can be found in the jupyter notebook within this repo.
 
 #### Dataset
-The dataset is from the KDD cup 1999 (https://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html). It contains several million packet instances and has 23 classes with the following distribution:
+The dataset is from the KDD cup 1999 (https://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html). It contains several million packet instances and has 23 classes with a highly varied class distribution. However since random sampling is currently used for the test train split, errors made on smaller classes are considered negligible (to be updated).
 
-smurf.              2807886
-neptune.            1072017
-normal.              972781
-satan.                15892
-ipsweep.              12481
-portsweep.            10413
-nmap.                  2316
-back.                  2203
-warezclient.           1020
-teardrop.               979
-pod.                    264
-guess_passwd.            53
-buffer_overflow.         30
-land.                    21
-warezmaster.             20
-imap.                    12
-rootkit.                 10
-loadmodule.               9
-ftp_write.                8
-multihop.                 7
-phf.                      4
-perl.                     3
-spy.                      2
-
-As you can see the class distribution is highly varied. However since for the time being random sampling is used for the test train split, errors made on smaller classes are considered negligible (until I am bothered to sample properly).
-
-#### Architecture
-Current training architecture (to be updated) is by inputting a sliding window of 100 packets and classifying the window based on the latest packet into the stream. This means in order for the model to perform its classification tasks we need to run the model on every single incoming packet, which incurs significant cost to network latency. Future work will optimise this by instead experimenting with the bidirectional nature of true BERT and instead classify individual packets regardless of their place in the sliding window, meaning the model will only have to be run every 100 packets. This flexible approach to the window (which in this case behaves like a GPT input token limit) will allow us to create a function between the length of the sliding window (x), and inference time (t) which can be minimised. In addition to this, no hyperparameter tuning was utilised (left for future work).
+#### Model inputs
+Current model inference (to be updated) is done by inputting a sliding window of 100 packets and classifying the window based on the latest packet into the stream. This means in order for the model to perform its classification tasks we need to run the model on every single incoming packet. This incurs significant cost to network latency. Future work will optimise this by instead experimenting with the bidirectional nature of true BERT and instead classify individual packets regardless of their place in the sliding window, meaning the model will only have to be run every interval of x number of packets instead of every individual packet. This flexible approach to the window (which in this case behaves like a GPT input token limit) will allow us to create a function between the length of the sliding window (x), and inference time (t) which can be minimised. In addition to this, no hyperparameter tuning was utilised (left for future work).
 
 #### Discussion of transformer and their advantages and disadvantages
 The advantage of this approach compared to others is a transformers ability to intepret the "tokens" (packets) within our sequence (sliding window) all at once, while learning the semantic relationships within packets across time to identify attacks across a wider variety of time frames. In addition to this, its ability to capture the relationship between each individual packet should in theory permit the identification or more complex or unorthodox attack patterns. This however does come at the cost of signficantly higher compute overhead compared to simpler architectures.
@@ -45,7 +19,6 @@ Current training behaviour reveals a low number of epochs to train (usually ~3 f
 
 #### Training Compute Performance
 This model was trained on a 4070 ti super with 16gb vram and a batch size of 32. With this set up each epoch takes ~6min to complete, this may be sped up significantly as GPU usage analysis shows potential room to increase batch size to 64. No measurement was done regarding FLOPS.
-
 
 #### Inference Compute Performance
 Current inference time is between 1 to 1.5ms for a sliding window of 100 packets. This would be sufficient assuming a packet size of 1500 bytes and 1Gbps link, however outside of this packet stream condition the current model may be too slow. In saying this, significant performance gains ( ~3x faster and ~4x smaller) potentially can be made via quantizing the model and / or ablative parameter reduction. 
