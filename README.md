@@ -37,6 +37,17 @@ The reduction in the model's precision via its simplification creates optimism t
 While transformer based architectures inherently require heavier compute than simpler architectures, with the correct optimizations of sliding window size, model quantizing, packet sniffer hardware optimization (to be compatible with quantised models), and empirically guided ablations, this nascent architecture is a promising future facing paradigm in IDS especially as attack patterns become significantly more complex and varied such that simpler classification models can no longer keep up. 
 ---
 ## Quantised Model Experiment
+As mentioned above, Quantisation is one of the avenues that we can take to run the model with lower compute demand. While the specifics of this implementation are detailed in the notebooks above, a general rundown is as follows.
+
+The main difference is of course in the way we introduce quantisation into the model. While many different methods exist (training fully quantized, post training quantization etc) we utilise Quantizing Aware Training (QAT) which essentially trains the model using low precision during the forward pass and calculating weight updates using full precision. This allows for significantly higher performance and stability during training compared to other quantizing methods. To do so, we utilise pytorch's QAT packages. 
+
+The remainder of the training pipeline largely remains the same with the exception of certain hyperparameters and the usage of cpu as it is better suited for mixed precision operations.
+
+An interesting finding throughout the process was that the model greatly benefits from significantly lower learning rates (100x) and more epochs. This makes intuitive sense lower precision weights would benefit from smaller increments during gradient descent. The unexpected outcome however was how stable the training process was, with loss converging extremely smoothly throughout 60 epochs, with signs suggesting further epochs would be beneficial. We however did not pursue this as training on CPU is incredibly time consuming (60 epochs took about 3 days to complete on an intel i7). 
+
+A legitimate concern that may arise with this abnormally good performance is with overfitting. However, both the training and validation loss stay extremely close with validation loss often coming in at lower values than training loss. On top of this, concerns regarding quantized models overfitting compared to their full precision counterparts is extremely unlikely due to the lower precision weights not being able to fit distributions as well as full precision. Further, random sampling during training runs is utilised minimising the chance of any biases. 
+
+Visualisations and loss metrics can be found in the notebook above.
 
 
 
