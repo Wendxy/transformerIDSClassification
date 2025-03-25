@@ -35,5 +35,8 @@ The reduction in the model's precision via its simplification creates optimism t
 
 #### Conclusion
 While transformer based architectures inherently require heavier compute than simpler architectures, with the correct optimizations of sliding window size, model quantizing, packet sniffer hardware optimization (to be compatible with quantised models), and empirically guided ablations, this nascent architecture is a promising future facing paradigm in IDS especially as attack patterns become significantly more complex and varied such that simpler classification models can no longer keep up. 
+---
+## Quantised Model Experiment
+
 
 
